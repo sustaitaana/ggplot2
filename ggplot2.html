@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ggplot2</title>
+    <meta charset="utf-8">
+    <meta name="author" content="" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# ggplot2
+
+---
+
+
+
+
+class: center, middle
+
+![small](images/useR.png)
+
+---
+class: inverse, middle
+
+# Agenda
+
++ Introducción: instalación, documentación, los datos
++ ¿Cómo hacer una gráfica?
++ Geometrías, estadísticas, escalas, facetas y sistemas de coordenadas
++ `qplot`
+
+---
+class: middle
+
+# ggplot2
+
+
+```r
+install.packages("ggplot2")
+```
+
++ [http://had.co.nz/ggplot2](http://had.co.nz/ggplot2)
+  + Documentación de alrededor de 90 objectos de `ggplot` con más de 500 ejemplos
++ Datos:
+
+
+
+```r
+str(diamonds)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	53940 obs. of  10 variables:
+##  $ carat  : num  0.23 0.21 0.23 0.29 0.31 0.24 0.24 0.26 0.22 0.23 ...
+##  $ cut    : Ord.factor w/ 5 levels "Fair"&lt;"Good"&lt;..: 5 4 2 4 2 3 3 3 1 3 ...
+##  $ color  : Ord.factor w/ 7 levels "D"&lt;"E"&lt;"F"&lt;"G"&lt;..: 2 2 2 6 7 7 6 5 2 5 ...
+##  $ clarity: Ord.factor w/ 8 levels "I1"&lt;"SI2"&lt;"SI1"&lt;..: 2 3 5 4 2 6 7 3 4 5 ...
+##  $ depth  : num  61.5 59.8 56.9 62.4 63.3 62.8 62.3 61.9 65.1 59.4 ...
+##  $ table  : num  55 61 65 58 58 57 57 55 61 61 ...
+##  $ price  : int  326 326 327 334 335 336 336 337 337 338 ...
+##  $ x      : num  3.95 3.89 4.05 4.2 4.34 3.94 3.95 4.07 3.87 4 ...
+##  $ y      : num  3.98 3.84 4.07 4.23 4.35 3.96 3.98 4.11 3.78 4.05 ...
+##  $ z      : num  2.43 2.31 2.31 2.63 2.75 2.48 2.47 2.53 2.49 2.39 ...
+```
+  
+---
+class: inverse, middle
+
+# Valores predeterminados
+
++ Capas con funciones de conveniencia
+  + Múltiples niveles que permiten un intercambio entre simplicidad y control
+  + `qplot` es más simple, pero nos da menos control
++ Para entender niveles más sofisticados necesitamos una comprensión básica de la gramática
+
+---
+class: middle
+
+# ¿Cómo hacer una gráfica?
+
+.pull-left[
+]
+
+.pull-right[
+![](images/ggplot2-data.png)
+]
+
+---
+class: middle
+
+# ¿Cómo hacer una gráfica?
+
+.pull-left[
++ Queremos hacer una gráfica de dispersión de `length` y `width`
+]
+
+.pull-right[
+![](images/ggplot2-data.png)
+]
+
+---
+class: middle
+
+# ¿Cómo hacer una gráfica?
+
+.pull-left[
++ Queremos hacer una gráfica de dispersión de `length` y `width`
++ ¿Qué es una gráfica de dispersión?
+]
+
+.pull-right[
+![](images/ggplot2-data.png)
+]
+
+---
+class: middle
+
+# ¿Cómo hacer una gráfica?
+
+.pull-left[
++ Queremos hacer una gráfica de dispersión de `length` y `width`
++ ¿Qué es una gráfica de dispersión?
+  + Representa cada observación con un punto (**geom**)
+]
+
+.pull-right[
+![](images/ggplot2-data.png)
+]
+
+---
+class: middle
+
+# ¿Cómo hacer una gráfica?
+
+.pull-left[
++ Queremos hacer una gráfica de dispersión de `length` y `width`
++ ¿Qué es una gráfica de dispersión?
+  + Representa cada observación con un punto (**geom**)
+  + Escala lineal en los ejes *x* y *y* (**scale**)
+]
+
+.pull-right[
+![](images/ggplot2-data.png)
+]
+
+---
+class: middle
+
+# ¿Cómo hacer una gráfica?
+
+.pull-left[
++ Queremos hacer una gráfica de dispersión de `length` y `width`
++ ¿Qué es una gráfica de dispersión?
+  + Representa cada observación con un punto (**geom**)
+  + Escala lineal de los ejes *x* y *y* (**scale**)
+  + Sistema de coordenadas cartesiano
+]
+
+.pull-right[
+![](images/ggplot2-data.png)
+]
+
+---
+class: center, middle
+
+# Datos
+![](images/ggplot2-data.png)
+
+---
+class: center, middle
+
+# Mapeo
+![](images/mapping.png)
+
+---
+class: center, middle
+
+# Escala
+Necesitamos convertir los datos a unidades físicas de "dibujo"
+
+![](images/scales.png)
+
+---
+class: center, middle
+
+# Capas
+![](images/layers.png)
+
+---
+class: center, middle
+
+# Gráfica
+![](images/plot.png)
+
+---
+class: middle, inverse
+
+# Componentes
+
++ Datos
++ Objeto geométrico (**geom**)
++ Transformación estadística (**stat**)
++ Escalas (**scale**)
++ Sistema de coordenadas
++ (+ ajuste de posición, facetas)
+
+---
+class: middle
+
+# Histograma
+
+.pull-left[
++ **geom**: bar
++ **stat**: bin
++ **scale**: lineal
++ **coordenadas**: cartesiano
+]
+
+.pull-right[
+![](ggplot2_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+
+---
+class: middle
+
+# Gráfica de Dispersión
+
+.pull-left[
++ **geom**: point
++ **stat**: identity
++ **scale**: lineal
++ **coordenadas**: cartesiano
+]
+
+.pull-right[
+![](ggplot2_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+]
+
+---
+class: middle, inverse
+
+# Capas
+
++ La descripción anterior está un poco simplificada. 
++ En realidad, tenemos: valores predeterminados + capas + escalas + sistema de coordenadas
++ Capa = datos + mapeo + geometría + estadística + posición
+
+---
+class: middle, inverse
+
+# Definición
+
+```
+ggplot(data, mapping) +
+layer(
+  stat = "",
+  geom = "",
+  position = "",
+  geom_parms = list(),
+  stat_params = list(),
+)
+```
+---
+class: middle, inverse
+
+# Capas
+
++ Usualmente no escribimos las especificaciones completas, usamos un atajo:
+  + `geom_smooth()`
+  + `stat_summary()`
++ Cada `geom` tiene un `stat` predeterminado, cada `stat` tiene un `geom` predeterminado (pero se pueden sobreescribir) 
+
+---
+class: middle
+
+# Ejemplo
+
+```r
+ggplot(diamonds)
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+# Ejemplo
+
+```r
+ggplot(diamonds) + aes(x=carat, y=price)
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+# Ejemplo
+
+```r
+ggplot(diamonds) + aes(x=carat, y=price) + 
+  geom_point()
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+# Ejemplo
+
+```r
+ggplot(diamonds) + aes(x=carat, y=price) + 
+  geom_point() + aes(colour=carat)
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+# Ejemplo
+
+Simplificado:
+
+```r
+ggplot(diamonds, aes(x=carat, y=price)) + 
+  geom_point(aes(colour=carat))
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+Y obtenemos el mismo resultado.
+
+---
+class: middle, inverse
+
+# Datos + Mapeo
+
++ Los datos y el mapeo de estos usualmente permanecen en la misma gráfica por lo que son almacenados como predeterminados:
+  + `ggplot(data, mapping = aes(x=x, y=y))`
+  + La función `aes` describe relaciones, no aporta datos 
+
+---
+class: middle, inverse
+
+# Geometrías
+
++ Las geometrías definen la forma básica de los elementos de la gráfica.
++ Básicos: `point`, `line`, `polygon`, `bar`
++ Compuestos: `boxplot`, `pointrange`
++ Estadísticos: `histogram`, `smooth`, `density`
+
+---
+class: middle, inverse
+
+# Estadísticas
+
++ No las hemos usado realmente, pero están por detrás de varias de las capas que hemos creado. Algunas geometrías son realmente estadísticas disfrazadas: 
+  + `geom_histogram = stat_bin + geom_bar`
+  + `geom_smooth = stat_smooth + geom_ribbon`
+  + `geom_density = stat_density + geom_ribbon`
+
+---
+class: middle
+
+# Variaciones a un Histograma
+
+
+```r
+p &lt;- ggplot(diamonds, aes(x=price))
+p + geom_histogram()
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+# Variaciones a un Histograma
+
+
+```r
+p + stat_bin(geom="area")
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+# Variaciones a un Histograma
+
+
+```r
+p + geom_histogram(aes(fill = clarity))
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle, inverse
+
+# Nuevas Variables
+
++ Algunas estadístcas producen nuevas variables en los datos
+  + `stat_bin` produce `count` y `density`
++ Si queremos mapear un `aesthetic` a una de estas nuevas variables, basta con que la rodeemos de `..`
+  + `+ geom_histogram(aes(y = ..density..))`
+  + `+ geom_histogram(aes(colour = ..count..))`
+
+---
+class: middle, inverse
+
+# Parámetros
+
++ Los parámetros modifican la apariencia de las geometrías y las operaciones de las estadísticas:
+  + `+ geom_smooth(method=lm)`
+  + `+ stat_bin(binwidth = 100)`
+  + `+ stat_summary(fun="mean_cl_boot")`
+  + `+ geom_boxplot(outlier.colour = "red")`
++ Cualquier `aesthetic` puede ser también usado como parámetro:
+  + `+ geom_point(colour = "red", size = 5)`
+  + `+ geom_line(linetype = 3)`
+
+---
+class: middle, inverse
+
+# Setear vs Mapear
+
+
+```r
+p &lt;- ggplot(diamonds, aes(x=carat,y=price))
+```
+
+¿Qué hará esto?
+
+1. `p + geom_point(aes(colour = "green"))`
+2. `p + geom_point(colour = "green")`
+
+---
+class: middle
+
+# Setear vs Mapear (1)
+
+
+```r
+p + geom_point(aes(colour = "green"))
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+# Setear vs Mapear (2)
+
+
+```r
+p + geom_point(colour = "green")
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle, inverse
+
+# Escalas
+
++ Las escalas controlan el mapeo entre los datos y los `aesthetics`, también controlan cómo se muestra la guía que los une (ejes o leyendas)
++ `ggplot` automáticamente añade escalas predeterminadas dependiendo de lo que necesitemos, pero casi seguro tendremos que personalizarlas.
++ Básicas: cambia nombres y rangos o límites  
++ De posición: son usadas para graficar en escalas no lineales
++ Las escalas que más comunmente manipulamos son `colour/fill` 
+  + discreto: `hue`, `brewer`, `grey`, `manual`
+  + continuo: `gradient`, `gradient2`
+
+---
+class: middle, inverse
+
+# Facetas
+
++ Es común que queramos graficar pequeños y múltiples subconjuntos de los datos
++ Para lograr esto, usamos:
+  + `+ facet_grid(row ~ col, margins = TRUE)`
+
+---
+class: middle
+
+# Ejemplo
+
+
+```r
+ggplot(diamonds, aes(x=carat, y=price)) +
+  geom_point() +
+  geom_smooth(method=lm) +
+  facet_grid(cut ~ .)
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle, inverse
+
+# Sistema de Coordenadas
+
++ Controla cómo conviven las dos posiciones del `aesthetics` (predeterminado: cartesiano)
+  + `coord_flip()`
+  + `coord_map()`
+  + `coord_polar()`
++ Ocurren después de las estadísticas y afectan la apariencia de las geometrías
+
+---
+class: middle
+
+# Ejemplo
+
+
+```r
+ggplot(diamonds, aes(x=carat, y=price)) +
+  geom_point() +
+  coord_flip()
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, middle
+
+# qplot
+
++ Contiene las características de `ggplot` con una sintaxis similar a la de `plot`
++ Características adicionales:
+  + Escala automáticamente los datos
+  + Se puede hacer cualquier tipo de gráfica
+  + Facetas y márgenes
+  + Crea objetos que se pueden guardar y modificar
+
+---
+# qplot
+
+
+```r
+qplot(carat, data=diamonds,
+geom="histogram", fill=clarity)
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# qplot
+
+
+```r
+qplot(carat, cut, data=diamonds,
+geom="jitter", colour=price)
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# qplot
+
+
+```r
+qplot(log10(price), data=diamonds,
+geom="histogram", binwidth=0.1)
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# qplot
+
+
+```r
+qplot(price, data=diamonds,
+geom="histogram", binwidth=10) +
+coord_trans(x="log10")
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle, center 
+
+.pull-left[
+# Contacto
+![](images/datank.jpg)
+
+[ana@datank.ai](ana@datank.ai)
+]
+
+.pull-right[
+# Gracias
+
+![](images/itam_logo.png)
+
+![](images/rladies.jpeg)
+
+]
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
